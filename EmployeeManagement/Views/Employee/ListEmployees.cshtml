@@ -1,0 +1,41 @@
+﻿@model IEnumerable<EmployeeManagement.Models.Employee>
+
+@* <p>
+    <a asp-action="AddEmployee">Add New Employee</a>
+</p> *@
+<table class="table">
+    <thead>
+        <tr>
+            <th>Emp_Id</th>
+            <th>Company_Name</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Mobile</th>
+            <th>Address</th>
+            <th>City</th>
+            <th>PinCode</th>
+            <th>Actions</th>
+        </tr>
+  
+    </thead>
+    <hr />
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem=>item.Emp_Id)</td>
+                <td>@Html.DisplayFor(modelItem => item.Company_Name)</td>
+                <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                <td>@Html.DisplayFor(modelItem => item.Mobile)</td>
+                <td>@Html.DisplayFor(modelItem => item.Address)</td>
+                <td>@Html.DisplayFor(modelItem => item.City)</td>
+                <td>@Html.DisplayFor(modelItem => item.PinCode)</td>
+                <td>
+                    @Html.ActionLink("Edit", "UpdateEmployeeById", new { Emp_Id = item.Emp_Id }) |
+                    @Html.ActionLink("Delete", "DeleteEmpById", new { Emp_Id = item.Emp_Id } ,new { onclick = "return confirm('Are sure wants to delete?');" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
