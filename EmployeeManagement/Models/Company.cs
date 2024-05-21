@@ -5,6 +5,8 @@ namespace EmployeeManagement.Models
     public class Company
     {
         [Key]
+        public int Company_Id {  get; set; }
+
         [Required(ErrorMessage ="Company Field is Required.")]
         public String Company_Name {  get; set; }
 
@@ -13,7 +15,7 @@ namespace EmployeeManagement.Models
 
         [Required(ErrorMessage ="Email Field is Required.")]
         [DataType(DataType.EmailAddress)]
-        [MaxLength(20)]
+        [MaxLength(30)]
         [RegularExpression(@"[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}", ErrorMessage = "Please enter a correct email")]
         public String Email {  get; set;}
 

@@ -1,23 +1,24 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using EmployeeManagement.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using EmployeeManagement.DataAccess;
+using EmployeeManagement.Models;
 
 namespace EmployeeManagement.Controllers
 {
     public class EmployeeController : Controller
     {
-        private readonly IConfiguration _configuration;    // Used to Read the Connection Details from ConnectionString 
         private readonly EmployeeDAL _employeeDAL;  // Used to Access the Data from EmployeeDAL Class
 
-        public EmployeeController(IConfiguration configuration, EmployeeDAL employeeDAL)
+        public EmployeeController(EmployeeDAL employeeDAL)
         {
-            _configuration = configuration;
             _employeeDAL = employeeDAL;
         }
 
+        [HttpGet]
         public IActionResult AddEmployee()
         {
+            List<Company> companyList = _employeeDAL.GetCompanies();
+            ViewBag.companyList1 = new SelectList(companyList, "Company_Id", "Company_Name");
             return View();
         }
 
@@ -26,57 +27,62 @@ namespace EmployeeManagement.Controllers
         {
             if (ModelState.IsValid)
             {
-                try
+                bool isInserted = _employeeDAL.AddEmployee(employee);
+                if (isInserted)
                 {
-                    bool isInserted = _employeeDAL.InsertEmployee(employee);
-                    if (isInserted)
-                    {
-                        return RedirectToAction("ListEmployees");
-                    }
-                    else
-                    {
-                        return RedirectToAction("AddEmployee");
-                    }
+                    TempData["AddMessage"] = "Employee Added Successfully";
+                    return RedirectToAction("ListEmployees");
                 }
-                catch (Exception ex)
+                else
                 {
-                    Console.WriteLine(ex.Message);
                     return RedirectToAction("AddEmployee");
                 }
             }
-            else
-            {
-                return RedirectToAction("AddEmployee");
-            }
+            return RedirectToAction("AddEmployee");
         }
 
         [HttpGet]
         public IActionResult ListEmployees()
         {
-            try
-            {
                 var employees = _employeeDAL.GetAllEmployees();
                 return View(employees);
-            }
-            catch (Exception ex)
-            {
-                ViewBag.Message = "Error: " + ex.Message;
-                return View();
-            }
         }
 
-        //[HttpDelete]
         public IActionResult DeleteEmpById(int Emp_Id)
         {
-            var deleteEmp = _employeeDAL.DeleteEmployeeById(Emp_Id);
-                return RedirectToAction("ListEmployees"); 
+               var deleteEmp= _employeeDAL.DeleteEmployeeById(Emp_Id);
+            TempData["DeleteMessage"] = "Employee record deleted successfully.";
+            return RedirectToAction("ListEmployees");
         }
 
-        [HttpPut]
-        public IActionResult UpdateEmployeeById(int Emp_Id)
+        [HttpGet]
+        public IActionResult UpdateEmployee(int Emp_Id)
         {
-            var updateEmp=_employeeDAL.UpdateEmpById(Emp_Id);
-                return RedirectToAction("AddEmployee","Employee");
+            var emp=_employeeDAL.GetEmpById(Emp_Id);
+            List<Company> companyList = _employeeDAL.GetCompanies();
+            ViewBag.companyList1 = new SelectList(companyList, "Company_Id", "Company_Name");
+            return View(emp);
+        }
+
+
+        [HttpPost]
+        public IActionResult UpdateEmployeeById(Employee employee)
+        {
+            if (ModelState.IsValid)
+            {
+                bool updateEmp = _employeeDAL.UpdateEmp(employee);
+                if (updateEmp)
+                {
+                    TempData["UpdateMessage"] = "Employee updated successfully.";
+                    return RedirectToAction("ListEmployees");
+                }
+                else
+                {
+                    TempData["UpdateMessage"] = "Failed to update employee.";
+                    return View(employee);
+                }
+            }
+            return View(employee);
         }
     }
 }

@@ -1,12 +1,26 @@
 ﻿@model EmployeeManagement.Models.Employee
 
-<h4>Employee Management</h4>
+@{
+    var message = TempData["UpdateMessage"] as string;
+}
+
+
+<h4>Edit Employee Details</h4>
 <hr />
+@if (!string.IsNullOrEmpty(message))
+{
+    <div class="alert alert-info">
+        @message
+    </div>
+}
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="InsertEmployeeDetails">
+        <form asp-action="UpdateEmployeeById" asp-controller="Employee">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
+            <div class="form-group">
+                <input asp-for="Emp_Id" class="form-control" type="hidden"/>
+                <span asp-validation-for="Emp_Id" class="text-danger" type="hidden"></span>
+            </div>
             <div class="form-group">
                 <label asp-for="Company_Name" class="control-label"></label><br />
                 <select asp-for="Company_Name" asp-items="@ViewBag.companyList1" class="form-control" style="width:350px;height:50px">
@@ -45,11 +59,15 @@
                 <span asp-validation-for="PinCode" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Update" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
+
+@* <div>
+    <a asp-action="ListEmployees">Back to List</a>
+</div> *@
 
 @section Scripts {
     @{

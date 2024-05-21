@@ -1,13 +1,44 @@
 ﻿@model IEnumerable<EmployeeManagement.Models.Employee>
 
-@* <p>
-    <a asp-action="AddEmployee">Add New Employee</a>
-</p> *@
+@if (TempData["DeleteMessage"]!= null)
+{
+    <div class="alert alert-info" id="delete">
+        @TempData["DeleteMessage"]
+    </div>
+}
+@if (TempData["UpdateMessage"]!= null)
+{
+    <div class="alert alert-info" id="update">
+        @TempData["UpdateMessage"]
+    </div>
+}
+@if (TempData["AddMessage"] != null)
+{
+    <div class="alert alert-info" id="Add">
+        @TempData["AddMessage"]
+    </div>
+}
+
+<script>
+    function messageTimeOut(id){
+        setTimeout(function () {
+            var message = document.getElementById(id);
+            if (message) {
+                message.style.display = 'none';
+            }
+        }, 4000);
+    }
+    messageTimeOut("delete");
+    messageTimeOut("update");
+    messageTimeOut("Add");
+</script>
+
+
 <table class="table">
     <thead>
         <tr>
             <th>Emp_Id</th>
-            <th>Company_Name</th>
+            <th>Company_Id</th>
             <th>Name</th>
             <th>Email</th>
             <th>Mobile</th>
@@ -16,26 +47,26 @@
             <th>PinCode</th>
             <th>Actions</th>
         </tr>
-  
     </thead>
     <hr />
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var employee in Model)
         {
             <tr>
-                <td>@Html.DisplayFor(modelItem=>item.Emp_Id)</td>
-                <td>@Html.DisplayFor(modelItem => item.Company_Name)</td>
-                <td>@Html.DisplayFor(modelItem => item.Name)</td>
-                <td>@Html.DisplayFor(modelItem => item.Email)</td>
-                <td>@Html.DisplayFor(modelItem => item.Mobile)</td>
-                <td>@Html.DisplayFor(modelItem => item.Address)</td>
-                <td>@Html.DisplayFor(modelItem => item.City)</td>
-                <td>@Html.DisplayFor(modelItem => item.PinCode)</td>
+                <td>@Html.DisplayFor(modelItem => employee.Emp_Id)</td>
+                <td>@Html.DisplayFor(modelItem => employee.Company_Name)</td>
+                <td>@Html.DisplayFor(modelItem => employee.Name)</td>
+                <td>@Html.DisplayFor(modelItem => employee.Email)</td>
+                <td>@Html.DisplayFor(modelItem => employee.Mobile)</td>
+                <td>@Html.DisplayFor(modelItem => employee.Address)</td>
+                <td>@Html.DisplayFor(modelItem => employee.City)</td>
+                <td>@Html.DisplayFor(modelItem => employee.PinCode)</td>
                 <td>
-                    @Html.ActionLink("Edit", "UpdateEmployeeById", new { Emp_Id = item.Emp_Id }) |
-                    @Html.ActionLink("Delete", "DeleteEmpById", new { Emp_Id = item.Emp_Id } ,new { onclick = "return confirm('Are sure wants to delete?');" })
+                    @Html.ActionLink("Edit", "UpdateEmployee", new { Emp_Id = employee.Emp_Id }) |
+                    @Html.ActionLink("Delete", "DeleteEmpById", new { Emp_Id = employee.Emp_Id }, new { onclick = "return confirm('Are sure wants to delete?');" })
                 </td>
             </tr>
         }
     </tbody>
 </table>
+

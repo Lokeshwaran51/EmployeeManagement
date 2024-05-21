@@ -16,7 +16,7 @@ namespace EmployeeManagement.DataAccess
         }
 
         //Insert
-        public bool InsertEmployee(Employee employee)
+        public bool AddEmployee(Employee employee)
         {
             try
             {
@@ -49,7 +49,7 @@ namespace EmployeeManagement.DataAccess
         //GetAll
         public List<Employee> GetAllEmployees()
         {
-            List<Employee> employees = new List<Employee>();
+            List<Employee> employeeList = new List<Employee>();
             try
             {
                 using (SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
@@ -62,18 +62,18 @@ namespace EmployeeManagement.DataAccess
                         {
                             while (reader.Read())
                             {
-                                Employee employee = new Employee()
-                                {
-                                    Emp_Id = reader.GetInt32("Emp_Id"),
-                                    Company_Name = reader["Company_Name"].ToString(),
-                                    Name = reader["Name"].ToString(),
-                                    Email = reader["Email"].ToString(),
-                                    Mobile = reader["Mobile"].ToString(),
-                                    Address = reader["Address"].ToString(),
-                                    City = reader["City"].ToString(),
-                                    PinCode = reader["PinCode"].ToString()
-                                };
-                                employees.Add(employee);
+                                Employee employee = new Employee();
+
+                                employee.Emp_Id = reader.GetInt32("Emp_Id");
+                                employee.Company_Name = reader["Company_Name"].ToString();
+                                employee.Name = reader["Name"].ToString();
+                                employee.Email = reader["Email"].ToString();
+                                employee.Mobile = reader["Mobile"].ToString();
+                                employee.Address = reader["Address"].ToString();
+                                employee.City = reader["City"].ToString();
+                                employee.PinCode = reader["PinCode"].ToString();
+                               
+                                employeeList.Add(employee);
                             }
                         }
                     }
@@ -83,7 +83,7 @@ namespace EmployeeManagement.DataAccess
             {
                 Console.WriteLine(ex);
             }
-            return employees;
+            return employeeList;
         }
 
         //Delete
@@ -109,35 +109,77 @@ namespace EmployeeManagement.DataAccess
             }
         }
 
-        //Update
-        public bool UpdateEmpById(int Emp_Id)
+        public bool UpdateEmp(Employee employee)
         {
-            Employee employee = new Employee();
-            using(SqlConnection connection=new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+            using (SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
             {
-                using (SqlCommand cmd = new SqlCommand("UpdateEmployeeDetailsById", connection))
+                using (SqlCommand cmd = new SqlCommand("[dbo].[UpdateEmployeeDetailsById]", connection))
                 {
-                    cmd.CommandType= CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@Emp_Id", Emp_Id);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Emp_Id", employee.Emp_Id);
+                   // cmd.Parameters.AddWithValue("@Company_Id", employee.Company_Id);
                     cmd.Parameters.AddWithValue("@Company_Name", employee.Company_Name);
                     cmd.Parameters.AddWithValue("@Name", employee.Name);
                     cmd.Parameters.AddWithValue("@Email", employee.Email);
                     cmd.Parameters.AddWithValue("@Mobile", employee.Mobile);
-                    cmd.Parameters.AddWithValue("@Address",employee.Address);
+                    cmd.Parameters.AddWithValue("@Address", employee.Address);
                     cmd.Parameters.AddWithValue("@City", employee.City);
                     cmd.Parameters.AddWithValue("@PinCode", employee.PinCode);
+
                     connection.Open();
                     int rowsAffected = cmd.ExecuteNonQuery();
-                    if(rowsAffected > 0)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                    return rowsAffected > 0;
                 }
             }
+        }
+
+        //Update
+        public Employee GetEmpById(int Emp_Id)
+        {
+            Employee employee = new Employee();
+            using (SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+            {
+                using (SqlCommand cmd = new SqlCommand("[dbo].[EmpGetById]", connection))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Emp_Id", Emp_Id);
+                    connection.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        employee.Company_Name = reader["Company_Name"].ToString();
+                        employee.Name = reader["Name"].ToString();
+                        employee.Email = reader["Email"].ToString();
+                        employee.Mobile = reader["Mobile"].ToString();
+                        employee.Address = reader["Address"].ToString();
+                        employee.City = reader["City"].ToString();
+                        employee.PinCode = reader["PinCode"].ToString();
+                    }
+                    return employee;
+                }
+            }
+        }
+
+        public List<Company> GetCompanies()
+        {
+            List<Company> companies = new List<Company>();
+                using (SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+                {
+                    using (SqlCommand cmd = new SqlCommand("GetCompany", connection))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        connection.Open();
+                        SqlDataReader reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            Company company = new Company();
+                            company.Company_Id = Convert.ToInt32(reader["Company_Id"]);
+                            company.Company_Name = reader["Company_Name"].ToString();
+                            companies.Add(company);
+                        }
+                    }
+                }  
+            return companies;
         }
     }
 }

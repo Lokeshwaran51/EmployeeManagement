@@ -1,12 +1,18 @@
 using EmployeeManagement.DataAccess;
+using EmployeeManagement.DataAccessLayer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// Register EmployeeDAL
+
 builder.Services.AddScoped<EmployeeDAL>();
+builder.Services.AddScoped<CompanyDAL>();
 
 var app = builder.Build();
 
