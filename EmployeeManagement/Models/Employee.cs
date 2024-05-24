@@ -8,8 +8,6 @@ namespace EmployeeManagement.Models
         [Required]
         public int Emp_Id { get; set; }
 
-     //   public int Company_Id {  get; set; }
-
         [Required(ErrorMessage ="CompanyName is Required..")]
         public String Company_Name { get; set; }
 
@@ -23,6 +21,9 @@ namespace EmployeeManagement.Models
         [RegularExpression(@"[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}", ErrorMessage = "Please enter a correct email")]
         public String Email {  get; set; }
 
+        [Required(ErrorMessage ="Gender Field is Required..")]
+        public String Gender {  get; set; }
+
         [Required(ErrorMessage ="Mobile Field is Required.")]
         [DataType(DataType.PhoneNumber)]
         [MaxLength(10)]
@@ -35,8 +36,8 @@ namespace EmployeeManagement.Models
         [Required(ErrorMessage ="City is Required.")]
         public String City { get; set; }
 
-        [Required(ErrorMessage = "Pincode is Required.")]
-        [RegularExpression(@"^[0-9]{6}$")]
-        public String PinCode { get; set; }
+        [Required(ErrorMessage = "Pincode is required.")]
+        [RegularExpression(@"^6[0-9]{5}$", ErrorMessage = "Pincode must be exactly 6 digits and start with 6.")]
+        public string PinCode { get; set; }
     }
 }

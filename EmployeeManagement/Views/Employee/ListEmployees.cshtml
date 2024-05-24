@@ -1,12 +1,12 @@
 ﻿@model IEnumerable<EmployeeManagement.Models.Employee>
 
-@if (TempData["DeleteMessage"]!= null)
+@if (TempData["DeleteMessage"] != null)
 {
     <div class="alert alert-info" id="delete">
         @TempData["DeleteMessage"]
     </div>
 }
-@if (TempData["UpdateMessage"]!= null)
+@if (TempData["UpdateMessage"] != null)
 {
     <div class="alert alert-info" id="update">
         @TempData["UpdateMessage"]
@@ -18,37 +18,87 @@
         @TempData["AddMessage"]
     </div>
 }
-
 <script>
-    function messageTimeOut(id){
+    function messageTimeOut(id) {
         setTimeout(function () {
             var message = document.getElementById(id);
-            if (message) {
+            if (message != null) {
                 message.style.display = 'none';
             }
-        }, 4000);
+        }, 5000);
     }
     messageTimeOut("delete");
     messageTimeOut("update");
     messageTimeOut("Add");
 </script>
 
+<style>
+    /* Table */
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+        /* Table header */
+        .table th {
+            background-color: #007bff;
+            color: #fff;
+            text-align: left;
+            padding: 8px;
+        }
+
+        /* Table body */
+        .table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        /* Alternating row background color */
+        .table tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+    /* Alert message */
+    .alert {
+        margin-bottom: 20px;
+        padding: 10px;
+        border-radius: 5px;
+    }
+
+    .alert-info {
+        background-color: #cce5ff;
+        color: #004085;
+        border: 1px solid #b8daff;
+    }
+
+    /* Action links */
+    .action-links a {
+        margin-right: 10px;
+        color: #007bff;
+        text-decoration: none;
+    }
+
+        .action-links a:hover {
+            text-decoration: underline;
+        }
+</style>
 
 <table class="table">
     <thead>
         <tr>
             <th>Emp_Id</th>
-            <th>Company_Id</th>
+            <th>Company_Name</th>
             <th>Name</th>
             <th>Email</th>
+            <th>Gender</th>
             <th>Mobile</th>
             <th>Address</th>
             <th>City</th>
             <th>PinCode</th>
-            <th>Actions</th>
+            <th style="width:150px">Actions</th>
         </tr>
     </thead>
-    <hr />
     <tbody>
         @foreach (var employee in Model)
         {
@@ -57,16 +107,16 @@
                 <td>@Html.DisplayFor(modelItem => employee.Company_Name)</td>
                 <td>@Html.DisplayFor(modelItem => employee.Name)</td>
                 <td>@Html.DisplayFor(modelItem => employee.Email)</td>
+                <td>@Html.DisplayFor(modelItem=>employee.Gender)</td>
                 <td>@Html.DisplayFor(modelItem => employee.Mobile)</td>
                 <td>@Html.DisplayFor(modelItem => employee.Address)</td>
                 <td>@Html.DisplayFor(modelItem => employee.City)</td>
                 <td>@Html.DisplayFor(modelItem => employee.PinCode)</td>
-                <td>
-                    @Html.ActionLink("Edit", "UpdateEmployee", new { Emp_Id = employee.Emp_Id }) |
-                    @Html.ActionLink("Delete", "DeleteEmpById", new { Emp_Id = employee.Emp_Id }, new { onclick = "return confirm('Are sure wants to delete?');" })
+                <td class="action-links" style="text-align:center">
+                    @Html.ActionLink("Edit", "UpdateEmployee", new { Emp_Id = employee.Emp_Id }, new { @class = "edit-link" }) |
+                    @Html.ActionLink("Delete", "SoftDeleteById", new { Emp_Id = employee.Emp_Id }, new { onclick = "return confirm('Are you sure you want to delete?');", @class = "delete-link" })
                 </td>
             </tr>
         }
     </tbody>
 </table>
-

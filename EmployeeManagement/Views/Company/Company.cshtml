@@ -1,7 +1,7 @@
 ﻿@model EmployeeManagement.Models.Company
 
-<h4>Company Details</h4>
-<hr />
+<b><h4 style="text-align:center;text-decoration:underline">Company Details</h4></b>
+
 @if (TempData["InsertCompany"] != null)
 {
     <div class="alert alert-info" id="insertcompany">
@@ -22,51 +22,49 @@
             if (message) {
                 message.style.display = 'none';
             }
-        }, 4000);
+        }, 5000);
     }
     timeOutFunction("insertcompany");
     timeOutFunction("insertcompanyexists")
 </script>
 
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6 offset-md-3">
         <form asp-action="Company" asp-controller="Company">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Company_Name" class="control-label"></label>
+            <div class="mb-3">
+                <label asp-for="Company_Name" class="form-label">Company Name</label>
                 <input asp-for="Company_Name" class="form-control" />
                 <span asp-validation-for="Company_Name" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Contact_person" class="control-label"></label>
+            <div class="mb-3">
+                <label asp-for="Contact_person" class="form-label">Contact Person</label>
                 <input asp-for="Contact_person" class="form-control" />
                 <span asp-validation-for="Contact_person" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label">Email</label>
                 <input asp-for="Email" class="form-control" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Phone" class="control-label"></label>
+            <div class="mb-3">
+                <label asp-for="Phone" class="form-label">Phone</label>
                 <input asp-for="Phone" class="form-control" />
                 <span asp-validation-for="Phone" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Address" class="control-label"></label>
+            <div class="mb-3">
+                <label asp-for="Address" class="form-label">Address</label>
                 <input asp-for="Address" class="form-control" />
                 <span asp-validation-for="Address" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Country" class="control-label"></label><br />
-                <select asp-for="Country" asp-items="@ViewBag.countryList" style="width:350px;height:50px">
-                    <option>Select a Country</option>
+            <div class="mb-3">
+                <label asp-for="Country" class="form-label">Country</label><br />
+                <select asp-for="Country" asp-items="@ViewBag.countryList" class="form-select">
+                    <option disabled selected>Select a Country</option>
                 </select>
                 <span asp-validation-for="Country" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
+            <button type="submit" class="btn btn-primary">AddCompany</button>
         </form>
     </div>
 </div>

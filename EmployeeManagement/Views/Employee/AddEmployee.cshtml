@@ -1,54 +1,149 @@
 ﻿@model EmployeeManagement.Models.Employee
 
-<h4>Employee Management</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="InsertEmployeeDetails">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-            <div class="form-group">
-                <label asp-for="Company_Name" class="control-label"></label><br />
-                <select asp-for="Company_Name" asp-items="@ViewBag.companyList1" class="form-control" style="width:350px;height:50px">
-                    <option>Select a Company</option>
-                </select>
-                <span asp-validation-for="Company_Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Mobile" class="control-label"></label>
-                <input asp-for="Mobile" class="form-control" />
-                <span asp-validation-for="Mobile" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Address" class="control-label"></label>
-                <input asp-for="Address" class="form-control" />
-                <span asp-validation-for="Address" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="City" class="control-label"></label>
-                <input asp-for="City" class="form-control" />
-                <span asp-validation-for="City" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PinCode" class="control-label"></label>
-                <input asp-for="PinCode" class="form-control" />
-                <span asp-validation-for="PinCode" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+<b><h4 style="text-align:center;text-decoration:underline">Employee Management</h4></b>
+@if (TempData["EmailExist"] != null)
+{
+    <div class="alert alert-danger" id="EmailExists">
+        @TempData["EmailExist"]
     </div>
+}
+
+<script>
+    function messageTimeOut(id) {
+        setTimeout(function () {
+            var message = document.getElementById(id);
+            if (message != null) {
+                message.style.display = 'none';
+            }
+        }, 5000);
+    }
+    messageTimeOut("EmailExists");
+</script>
+
+<style>
+    /* Center-align the heading */
+    h4 {
+        text-align: center;
+    }
+
+    /* Form container */
+    .form-container {
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    /* Form input fields */
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    /* Form labels */
+    .control-label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    /* Form select box */
+    select.form-control {
+        width: 100%;
+        height: 40px;
+    }
+
+    /* Form text inputs */
+    input.form-control {
+        width: 100%;
+        height: 40px;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+
+    /* Submit button */
+    .btn-primary {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        cursor: pointer;
+    }
+
+    /* Alert message */
+    .alert {
+        margin-bottom: 20px;
+        padding: 10px;
+        border-radius: 5px;
+    }
+
+    .alert-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+</style>
+
+<div class="form-container">
+    <form asp-action="InsertEmployeeDetails" asp-controller="Employee" asp-method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+      
+
+        <div class="form-group">
+            <label asp-for="Company_Name" class="control-label"></label>
+            <select asp-for="Company_Name" asp-items="@ViewBag.companyList1" class="form-control">
+                <option disabled selected>Select a Company</option>
+            </select>
+            <span asp-validation-for="Company_Name" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Name" class="control-label"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Email" class="control-label"></label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Gender" class="control-label">Gender</label>
+            <div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" asp-for="Gender" value="Male" />
+                    <label class="form-check-label" for="Gender">Male</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" asp-for="Gender" value="Female" />
+                    <label class="form-check-label" for="Gender">Female</label>
+                </div>
+            </div>
+            <span asp-validation-for="Gender" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Mobile" class="control-label"></label>
+            <input asp-for="Mobile" class="form-control" />
+            <span asp-validation-for="Mobile" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Address" class="control-label"></label>
+            <input asp-for="Address" class="form-control" />
+            <span asp-validation-for="Address" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="City" class="control-label"></label>
+            <input asp-for="City" class="form-control" />
+            <span asp-validation-for="City" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="PinCode" class="control-label"></label>
+            <input asp-for="PinCode" class="form-control" />
+            <span asp-validation-for="PinCode" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="AddEmployee" class="btn btn-success" />
+        </div>
+    </form>
 </div>
 
 @section Scripts {

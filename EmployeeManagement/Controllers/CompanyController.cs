@@ -14,7 +14,7 @@ namespace EmployeeManagement.Controllers
             _companyDAL = companyDAL;
         }
 
-        
+        [HttpGet]
         public IActionResult Company()
         {
             List<Country> countryList = _companyDAL.GetCountry();
