@@ -87,7 +87,6 @@
 <div class="form-container">
     <form asp-action="InsertEmployeeDetails" asp-controller="Employee" asp-method="post">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-      
 
         <div class="form-group">
             <label asp-for="Company_Name" class="control-label"></label>
@@ -120,6 +119,25 @@
             </div>
             <span asp-validation-for="Gender" class="text-danger"></span>
         </div>
+
+        <div class="form-group">
+            <label class="control-label"asp-for="SelectedAreas">Area of Interest</label>
+            <div>
+                @if (ViewBag.AreaOfInterestList1 != null)
+                {
+                    foreach (var interest in ViewBag.AreaOfInterestList1)
+                    {
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="SelectedAreas" value="@interest.AreaOfInterest_Id1" />
+                            <label class="form-check-label">@interest.AreaOfInterest</label>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+
+
         <div class="form-group">
             <label asp-for="Mobile" class="control-label"></label>
             <input asp-for="Mobile" class="form-control" />
@@ -141,7 +159,7 @@
             <span asp-validation-for="PinCode" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <input type="submit" value="AddEmployee" class="btn btn-success" />
+            <input type="submit" value="Add Employee" class="btn btn-success" />
         </div>
     </form>
 </div>

@@ -24,6 +24,9 @@ namespace EmployeeManagement.Models
         [Required(ErrorMessage ="Gender Field is Required..")]
         public String Gender {  get; set; }
 
+       
+        public String? AreaOfInterest { get; set; } 
+
         [Required(ErrorMessage ="Mobile Field is Required.")]
         [DataType(DataType.PhoneNumber)]
         [MaxLength(10)]
@@ -39,5 +42,12 @@ namespace EmployeeManagement.Models
         [Required(ErrorMessage = "Pincode is required.")]
         [RegularExpression(@"^6[0-9]{5}$", ErrorMessage = "Pincode must be exactly 6 digits and start with 6.")]
         public string PinCode { get; set; }
+
+        public List<String>? SelectedAreas {  get; set; }    
+        
+        public Employee()
+        {
+            SelectedAreas = new List<String>(); 
+        }
     }
 }

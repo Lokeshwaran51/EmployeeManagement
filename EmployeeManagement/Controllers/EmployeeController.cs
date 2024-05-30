@@ -2,73 +2,84 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using EmployeeManagement.DataAccess;
 using EmployeeManagement.Models;
+using System.Collections.Generic;
 
 namespace EmployeeManagement.Controllers
 {
     public class EmployeeController : Controller
     {
-        private readonly EmployeeDAL _employeeDAL;  // Used to Access the Data from EmployeeDAL Class
+        private readonly EmployeeDAL _employeeDAL;
 
         public EmployeeController(EmployeeDAL employeeDAL)
         {
             _employeeDAL = employeeDAL;
         }
 
-        //It returns empty form 
         [HttpGet]
         public IActionResult AddEmployee()
         {
-            List<Company> companyList = _employeeDAL.GetCompanies();
-            ViewBag.companyList1 = new SelectList(companyList, "Company_Id", "Company_Name");
+            try
+            {
+                List<Company> companyList = _employeeDAL.GetCompanies();
+                ViewBag.companyList1 = new SelectList(companyList, "Company_Id", "Company_Name");
 
-            return View();
+                List<AreaOfInt> AreaOfInterestList = _employeeDAL.GetArea();
+                ViewBag.AreaOfInterestList1 = AreaOfInterestList;
+
+                return View();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return View("Error");
+            }
         }
 
 
         [HttpPost]
-        public IActionResult InsertEmployeeDetails(Employee employee)
+        public IActionResult InsertEmployeeDetails(Employee employee, string[] AreaOfInterest)
         {
             if (ModelState.IsValid)
             {
+                employee.AreaOfInterest = string.Join(",", AreaOfInterest);
+
                 var emailExists = _employeeDAL.CheckEmployeeEmail(employee.Email);
                 if (emailExists)
                 {
                     TempData["EmailExist"] = "Registered email already exists.";
-                    return RedirectToAction("AddEmployee", "Employee"); // Return the view with the same model to display the error message
+                    return RedirectToAction("AddEmployee", "Employee");
                 }
 
                 var isInserted = _employeeDAL.AddEmployee(employee);
                 if (isInserted)
                 {
                     TempData["AddMessage"] = "Employee added successfully.";
-                    return RedirectToAction("ListEmployees", "Employee"); // Redirect to the list of employees
+                    return RedirectToAction("ListEmployees", "Employee");
                 }
             }
-            return View(employee);
+            return View("AddEmployee", employee);
         }
 
-
-
-        //UpdateEmployeeById  GetMethod
         [HttpGet]
         public IActionResult UpdateEmployee(int Emp_Id)
         {
-            var emp=_employeeDAL.GetEmployeeById(Emp_Id); //It gets particular employee details from db using emp_id
-
-            List<Company> companyList = _employeeDAL.GetCompanies();  //Here i want to show DropDown list in Update form
+            var emp = _employeeDAL.GetEmployeeById(Emp_Id);
+            List<Company> companyList = _employeeDAL.GetCompanies();
             ViewBag.companyList1 = new SelectList(companyList, "Company_Id", "Company_Name");
+
+            List<AreaOfInt> AreaOfInterestList = _employeeDAL.GetArea();
+            ViewBag.AreaOfInterestList1 = AreaOfInterestList;
             return View(emp);
         }
 
-
-        // Insert the Updated Values to db post method
         [HttpPost]
-        public IActionResult UpdateEmployeeById(Employee employee)
+        public IActionResult UpdateEmployeeById(Employee employee, string[] AreaOfInterest)
         {
             if (ModelState.IsValid)
             {
+                employee.AreaOfInterest = string.Join(",", AreaOfInterest);
                 var updateEmp = _employeeDAL.UpdateEmp(employee);
-                if ( _employeeDAL.UpdateEmp(employee))
+                if (updateEmp)
                 {
                     TempData["UpdateMessage"] = "Employee updated successfully.";
                     return RedirectToAction("ListEmployees");
@@ -77,7 +88,6 @@ namespace EmployeeManagement.Controllers
             return View(employee);
         }
 
-        //DeleteEmpById before soft deletion is happen
         public IActionResult SoftDeleteById(int Emp_Id)
         {
             var deleteEmp = _employeeDAL.DeleteEmployeeById(Emp_Id);
@@ -85,13 +95,10 @@ namespace EmployeeManagement.Controllers
             return RedirectToAction("ListEmployees");
         }
 
-
-        //List Employee Details in table after the Soft Deletion 
-        [HttpGet]
         public IActionResult ListEmployees()
         {
-            var activeEmployees = _employeeDAL.GetAllEmployees();
-            return View(activeEmployees);
+            var empList = _employeeDAL.GetAllEmployees();
+            return View(empList);
         }
     }
 }
